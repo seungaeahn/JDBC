@@ -1,0 +1,17 @@
+package com.kh.db.oraclesample;
+
+public class DBConnection {
+
+	public static void main(String[] args) {
+		// 1. 드라이버 연결
+		String driver = "oracle.jdbc.driver.OracleDriver";
+		//2. 오라클 내 컴퓨터 연결
+		//                              나의 IP주소:port번호
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "khbank";
+		String password = "kh1234";
+		
+
+	}
+
+}
