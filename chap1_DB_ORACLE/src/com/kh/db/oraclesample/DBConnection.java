@@ -11,14 +11,15 @@ public class DBConnection {
 
 
 	public static void main(String[] args) {	
-		//selectbank();
-		//selectcafe();
+		selectAll();
+		selectOne();
 		//selectIf();
-		insertBank();
+		//insertBank();
+		//insertKhcafe();
 
 }
 
-	static void selectbank() {
+	static void selectAll() {
 		// 1. 드라이버 연결 : Oracle JDBC 드라이버 클래스 이름 
 				String driver = "oracle.jdbc.driver.OracleDriver";
 				//2. 오라클 내 컴퓨터 연결 : 데이터베이스 연결 정보
@@ -67,7 +68,7 @@ public class DBConnection {
 
 			}
 	
-	static void selectcafe() {
+	static void selectOne() {
 		// 1. 드라이버 연결 : Oracle JDBC 드라이버 클래스 이름 
 		String driver = "oracle.jdbc.driver.OracleDriver";
 		//2. 오라클 내 컴퓨터 연결 : 데이터베이스 연결 정보
@@ -112,7 +113,6 @@ public class DBConnection {
 		}
 
 	}
-	
 
 	static void selectIf() {
 		String driver = "oracle.jdbc.driver.OracleDriver";
@@ -190,6 +190,30 @@ public class DBConnection {
 		}
 	}
 
+	static void insertKhcafe() {
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "khcafe";
+		String password = "KH1234";
+		try {
+			Connection con = DriverManager.getConnection(url, user, password);
+			//insert문 작성해보기 
+			String insertQuery = "INSERT INTO CAFES(cafe_id, name, address, phone_number, operating_hours)" 
+					+ "VALUES(?,?,?,?,?)";
+			PreparedStatement insertState = con.prepareStatement(insertQuery);
+			insertState.setInt(1, 19);
+			insertState.setString(2, "스타벅스");
+			insertState.setString(3, "수원시 이의동 센트럴타운로 22");
+			insertState.setString(4, "031-123-4567");
+			insertState.setString(5, "매일: 09:00-23:00");
+			int rowsInsert = insertState.executeUpdate();
+			System.out.println(rowsInsert + " row 추가됨");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 
 }	
 
