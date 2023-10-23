@@ -15,6 +15,49 @@ public class UserMain {
 		UserMain um = new UserMain();
 		um.selectScanner();
 	}
+
+	public boolean checkId(int userId) throws SQLException {
+		//1.DB 연결
+		String jdbcURL = "jdbc:oracle:thin:@localhost:1521:xe";
+		String dbUserName = "khcafe";
+		String dbPassWord = "KH1234";
+	
+		Connection cc = DriverManager.getConnection(jdbcURL, dbUserName, dbPassWord);
+		
+		//2.SQL
+		String sql = "SELECT * FROM USERINFO WHERE user_id = ?";
+		PreparedStatement ps = cc.prepareStatement(sql);
+		ps.setInt(1, userId);
+		
+		//3.If활용해서 Result.next() 
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			int id = rs.getInt(1);
+			return id > 0; //0이상이면 true
+		}
+		return false; //일치하지 않을 때	
+	}
+	public boolean checkEmail(String userEmail) throws SQLException {
+		//1.DB 연결
+		String jdbcURL = "jdbc:oracle:thin:@localhost:1521:xe";
+		String dbUserName = "khcafe";
+		String dbPassWord = "KH1234";
+	
+		Connection cc = DriverManager.getConnection(jdbcURL, dbUserName, dbPassWord);
+		
+		//2.SQL
+		String sql = "SELECT * FROM USERINFO WHERE email = ?";
+		PreparedStatement ps = cc.prepareStatement(sql);
+		ps.setString(1, userEmail);
+		
+		//3.If활용해서 Result.next() 
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			int id = rs.getInt(1);
+			return id > 0; //0이상이면 true
+		}
+		return false; //일치하지 않을 때	
+	}
 	
 	public void selectScanner() {
 		//1. DB 연결 URL, USERNAME, PASSWORD
@@ -40,11 +83,14 @@ public class UserMain {
 			}
 			
 			int userId = Integer.parseInt(input);
+			System.out.println("이메일을 입력 : ");
+			String email = sc.nextLine();
 			//select 문 출력하기 
 			
-			String sql = "SELECT * FROM USERINFO WHERE user_id = ?";
+			String sql = "SELECT * FROM USERINFO WHERE user_id = ? AND email = ?";
 			PreparedStatement st = cc.prepareStatement(sql);
 			st.setInt(1, userId);
+			st.setString(2, email);
 			ResultSet rs = st.executeQuery();
 			
 			//selectOne if
@@ -56,11 +102,25 @@ public class UserMain {
 				System.out.println();
 				
 			} else {
+				boolean idTrue = checkId(userId);
+				boolean emailTrue = checkEmail(email);
+					if(!idTrue && emailTrue) {
+						System.out.println("일치하지 않는 User ID 입니다.");
+						System.out.println();
+					} else if(idTrue && !emailTrue) {
+						System.out.println("일치하지 않는 User Email 입니다.");
+						System.out.println();
+					} else {
+						System.out.println("일치하는 User ID와 Email을 찾을 수가 없습니다.");
+						System.out.println();
+					}
 				System.out.println("User를 찾을 수 없습니다.");
+				
 			}
 			
 			
 		}
+		
 		
 		
 		
@@ -69,13 +129,14 @@ public class UserMain {
 		}
 	}
 	
+	
 
 
 	public void selectAll() {
 		//1. DB 연결 URL, USERNAME, PASSWORD
 		String jdbcURL = "jdbc:oracle:thin:@localhost:1521:xe";
 		String dbUserName = "khcafe";
-		String dbPassWord = "kh1234";
+		String dbPassWord = "KH1234";
 		
 		try {
 			Connection connection = DriverManager.getConnection(jdbcURL, dbUserName, dbPassWord);
